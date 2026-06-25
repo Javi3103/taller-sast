@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Vulnerable | OWASP Top 10 - SQLi, XSS, Command Injection</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container mt-4">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#productos">📦
+                    Productos</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#categorias">🏷️
+                    Categorías</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#comandos">💀 Command
+                    Injection</button></li>
+        </ul>
+
+        <div class="tab-content mt-3">
+            <!-- PRODUCTOS -->
+            <div class="tab-pane fade show active" id="productos">
+                <div class="card">
+                    <div class="card-header bg-danger text-white">⚠️ Productos: SQLi + XSS</div>
+                    <div class="card-body">
+                        <form id="productForm" class="row g-3 mb-4">
+                            <div class="col-md-4"><label>Nombre</label><input type="text" id="productName"
+                                    class="form-control"></div>
+                            <div class="col-md-4"><label>Descripción</label><input type="text" id="productDesc"
+                                    class="form-control"></div>
+                            <div class="col-md-2"><label>Precio</label><input type="number" id="productPrice"
+                                    class="form-control"></div>
+                            <div class="col-md-2"><label>Categoría</label><select id="productCategory"
+                                    class="form-select"></select></div>
+                            <div class="col-12"><button type="submit" class="btn btn-primary">➕ Agregar</button></div>
+                        </form>
+                        <hr>
+                        <h4>🔍 Búsqueda SQLi</h4>
+                        <div class="input-group mb-3">
+                            <input type="text" id="searchProductInput" class="form-control"
+                                placeholder="Payload: ' OR '1'='1">
+                            <button id="searchProductBtn" class="btn btn-outline-danger">Buscar</button>
+                            <button id="resetProductBtn" class="btn btn-outline-secondary">Reset</button>
+                        </div>
+                        <h4>📋 Lista de productos (XSS almacenado)</h4>
+                        <div id="productList" class="list-group"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CATEGORÍAS (ahora con SQLi y XSS) -->
+            <div class="tab-pane fade" id="categorias">
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">🏷️ Categorías: SQLi + XSS almacenado</div>
+                    <div class="card-body">
+                        <form id="categoryForm" class="row g-3 mb-4">
+                            <div class="col-auto"><input type="text" id="categoryName" class="form-control"
+                                    placeholder="Nombre categoría"></div>
+                            <div class="col-auto"><button type="submit" class="btn btn-success">➕ Agregar</button></div>
+                        </form>
+                        <hr>
+                        <h4>🔍 Búsqueda SQLi en categorías</h4>
+                        <div class="input-group mb-3">
+                            <input type="text" id="searchCategoryInput" class="form-control"
+                                placeholder="Payload: ' OR '1'='1">
+                            <button id="searchCategoryBtn" class="btn btn-outline-danger">Buscar</button>
+                            <button id="resetCategoryBtn" class="btn btn-outline-secondary">Mostrar todas</button>
+                        </div>
+                        <h4>📋 Lista de categorías (XSS almacenado)</h4>
+                        <div id="categoryList" class="list-group"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMMAND INJECTION -->
+            <div class="tab-pane fade" id="comandos">
+                <div class="card">
+                    <div class="card-header bg-dark text-white">💀 Command Injection - Ejecuta comandos en el servidor
+                    </div>
+                    <div class="card-body">
+                        <div class="input-group mb-3">
+                            <input type="text" id="cmdInput" class="form-control"
+                                placeholder="Ej: whoami, dir, ls, cat /etc/passwd">
+                            <button id="execCmdBtn" class="btn btn-danger">Ejecutar comando</button>
+                        </div>
+                        <pre id="cmdOutput" class="bg-light p-3 border rounded" style="min-height: 150px;"></pre>
+                        <div class="alert alert-warning small">
+                            ⚠️ Endpoint vulnerable: <code>/api/exec?cmd=whoami</code><br>
+                            Prueba: <code>whoami</code> , <code>dir</code> (Windows) o <code>ls -la</code> (Linux/Mac)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
